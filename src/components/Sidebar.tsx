@@ -1,11 +1,11 @@
-import { SvgIconTypeMap } from "@material-ui/core";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import {
+  Add,
   Apps,
   BookmarkBorder,
   Create,
   Drafts,
   ExpandLess,
+  ExpandMore,
   FiberManualRecord,
   FileCopy,
   Inbox,
@@ -14,10 +14,16 @@ import {
 } from "@material-ui/icons";
 import React from "react";
 import styled from "styled-components";
-import { JsxElement } from "typescript";
 import SidebarOption from "./SidebarOption";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { collection, getFirestore } from "firebase/firestore";
 
 export const Sidebar: React.FC = () => {
+  // TODO: add a type to the channel
+  const [channels, loading, error] = useCollection(
+    collection(getFirestore(), "rooms")
+  );
+
   return (
     <SidebarContainer>
       <SidebarHeader>
@@ -39,8 +45,14 @@ export const Sidebar: React.FC = () => {
       <SidebarOption Icon={Apps} title="Apps" />
       <SidebarOption Icon={FileCopy} title="File browser" />
       <SidebarOption Icon={ExpandLess} title="Show less" />
-
       <hr />
+      <SidebarOption Icon={ExpandMore} title="Channels" />
+      <hr />
+      <SidebarOption Icon={Add} title="Add Channel" addChannelOption />
+
+      {channels?.docs.map((doc) => (
+        <SidebarOption key={doc.id} id={doc.id} title={doc.data().name} />
+      ))}
     </SidebarContainer>
   );
 };
@@ -52,6 +64,13 @@ const SidebarContainer = styled.div`
   border-top: 1px solid #601c69;
   max-width: 260px;
   margin-top: 60px;
+
+  > hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-top: 1px solid #601c69;
+  }
 `;
 
 const SidebarHeader = styled.div`
