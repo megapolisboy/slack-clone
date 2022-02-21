@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Avatar } from "@material-ui/core";
 import { AccessTime, HelpOutline, Search } from "@material-ui/icons";
 
-export const Header: React.FC = () => {
+const Header: React.FC = () => {
   return (
     <HeaderContainer>
       <HeaderLeft>
@@ -23,6 +23,8 @@ export const Header: React.FC = () => {
     </HeaderContainer>
   );
 };
+
+export default Header;
 
 const HeaderRight = styled.div`
   flex: 0.3;

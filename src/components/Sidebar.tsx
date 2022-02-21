@@ -12,17 +12,19 @@ import {
   InsertComment,
   PeopleAlt,
 } from "@material-ui/icons";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import SidebarOption from "./SidebarOption";
-import { useCollection } from "react-firebase-hooks/firestore";
-import { collection, getFirestore } from "firebase/firestore";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { fetchRooms, selectRooms } from "../features/roomsSlice";
 
-export const Sidebar: React.FC = () => {
-  // TODO: add a type to the channel
-  const [channels, loading, error] = useCollection(
-    collection(getFirestore(), "rooms")
-  );
+const Sidebar: React.FC = () => {
+  const channels = useAppSelector(selectRooms);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchRooms());
+  }, [dispatch]);
 
   return (
     <SidebarContainer>
@@ -50,12 +52,14 @@ export const Sidebar: React.FC = () => {
       <hr />
       <SidebarOption Icon={Add} title="Add Channel" addChannelOption />
 
-      {channels?.docs.map((doc) => (
-        <SidebarOption key={doc.id} id={doc.id} title={doc.data().name} />
+      {channels?.map((doc) => (
+        <SidebarOption key={doc.id} id={doc.id} title={doc.name} />
       ))}
     </SidebarContainer>
   );
 };
+
+export default Sidebar;
 
 const SidebarContainer = styled.div`
   color: white;

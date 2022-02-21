@@ -18,6 +18,8 @@ import {
   updateDoc,
   doc,
   serverTimestamp,
+  getDoc,
+  getDocs,
 } from "firebase/firestore";
 import {
   getStorage,
@@ -39,12 +41,12 @@ export const firebaseConfig = {
 
 initializeApp(firebaseConfig);
 
-export const addRoom = async (roomName: string) => {
-  try {
-    await addDoc(collection(getFirestore(), "rooms"), {
-      name: roomName,
-    });
-  } catch (error) {
-    console.error(error);
-  }
+export const addRoomToFirebase = (roomName: string) => {
+  return addDoc(collection(getFirestore(), "rooms"), {
+    name: roomName,
+  });
+};
+
+export const fetchRoomsFromFirebase = () => {
+  return getDocs(collection(getFirestore(), "rooms"));
 };
