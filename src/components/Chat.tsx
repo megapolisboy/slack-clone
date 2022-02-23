@@ -1,19 +1,39 @@
 import { InfoOutlined, StarBorderOutlined } from "@material-ui/icons";
+import {
+  collection,
+  doc,
+  getFirestore,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import React from "react";
 import styled from "styled-components";
 import { useAppSelector } from "../app/hooks";
 import { selectRoomId } from "../features/currentRoomSlice";
 import ChatInput from "./ChatInput";
+import { useCollection, useDocument } from "react-firebase-hooks/firestore";
+
+const turnToDefined = (str: string | null) => {
+  if (!str) return "";
+  return str;
+};
 
 const Chat: React.FC = () => {
-  const roomId = useAppSelector(selectRoomId);
+  const roomId = useAppSelector(selectRoomId) || "abc";
+  const [roomDetails] = useDocument(doc(getFirestore(), "rooms", roomId));
+  const [roomMessages] = useCollection(
+    query(
+      collection(getFirestore(), "rooms", roomId, "messages"),
+      orderBy("timestamp", "asc")
+    )
+  );
   return (
     <ChatContainer>
       <>
         <Header>
           <HeaderLeft>
             <h4>
-              <strong>#RoomName</strong>
+              <strong>#{roomDetails?.data()?.name}</strong>
             </h4>
             <StarBorderOutlined />
           </HeaderLeft>
@@ -26,7 +46,7 @@ const Chat: React.FC = () => {
         <ChatMessages></ChatMessages>
 
         <ChatInput
-          //ChannelName
+          channelName={roomDetails?.data()?.name || "Channel"}
           channelId={roomId}
         />
       </>

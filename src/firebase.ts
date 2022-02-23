@@ -29,6 +29,7 @@ import {
 } from "firebase/storage";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { getPerformance } from "firebase/performance";
+import { Message } from "./features/currentRoomSlice";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyCUD3UuGkBUPkYsRE3JqZTO8I85ncA_Nv0",
@@ -49,4 +50,10 @@ export const addRoomToFirebase = (roomName: string) => {
 
 export const fetchRoomsFromFirebase = () => {
   return getDocs(collection(getFirestore(), "rooms"));
+};
+
+export const addMessageToFirebase = (message: Message, roomId: string) => {
+  return addDoc(collection(getFirestore(), "rooms", roomId, "messages"), {
+    ...message,
+  });
 };
