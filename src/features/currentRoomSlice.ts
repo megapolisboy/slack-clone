@@ -5,7 +5,7 @@ import { addMessageToFirebase } from "../firebase";
 
 export interface Message {
   message: string;
-  timestamp: FieldValue;
+  timestamp: any;
   user: string;
   userImage: string;
 }

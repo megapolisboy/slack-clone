@@ -9,9 +9,13 @@ import {
 import React from "react";
 import styled from "styled-components";
 import { useAppSelector } from "../app/hooks";
-import { selectRoomId } from "../features/currentRoomSlice";
+import {
+  Message as MessageType,
+  selectRoomId,
+} from "../features/currentRoomSlice";
 import ChatInput from "./ChatInput";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
+import Message from "./Message";
 
 const turnToDefined = (str: string | null) => {
   if (!str) return "";
@@ -43,7 +47,21 @@ const Chat: React.FC = () => {
             </p>
           </HeaderRight>
         </Header>
-        <ChatMessages></ChatMessages>
+        <ChatMessages>
+          {roomMessages?.docs.map((doc) => {
+            const { message, timestamp, user, userImage } =
+              doc.data() as MessageType;
+            return (
+              <Message
+                key={doc.id}
+                message={message}
+                timestamp={timestamp}
+                user={user}
+                userImage={userImage}
+              />
+            );
+          })}
+        </ChatMessages>
 
         <ChatInput
           channelName={roomDetails?.data()?.name || "Channel"}

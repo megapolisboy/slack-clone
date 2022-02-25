@@ -32,6 +32,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ channelName, channelId }) => {
         roomId,
       })
     );
+    setInput("");
     return true;
   };
 
