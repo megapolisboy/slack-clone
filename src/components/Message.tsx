@@ -8,12 +8,15 @@ const Message: React.FC<MessageProps> = ({
   user,
   userImage,
 }) => {
-  console.log(timestamp);
+  console.log(message, timestamp, user, userImage);
   return (
     <MessageContainer>
       <img src={userImage} alt="" />
       <MessageInfo>
-        <h4>{user}</h4>
+        <h4>
+          {user}
+          <span>{timestamp ? timestamp.toDate().toUTCString() : ""}</span>
+        </h4>
         <p>{message}</p>
       </MessageInfo>
     </MessageContainer>

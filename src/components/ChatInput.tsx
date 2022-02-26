@@ -7,9 +7,14 @@ import { addMessage } from "../features/currentRoomSlice";
 interface ChatInputProps {
   channelName: string;
   channelId: string | null;
+  chatRef: React.RefObject<HTMLDivElement>;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ channelName, channelId }) => {
+const ChatInput: React.FC<ChatInputProps> = ({
+  channelName,
+  channelId,
+  chatRef,
+}) => {
   const [input, setInput] = useState<string>("");
   const dispatch = useAppDispatch();
   const roomId = useAppSelector((state) => state.currentRoom.roomId);
@@ -33,6 +38,10 @@ const ChatInput: React.FC<ChatInputProps> = ({ channelName, channelId }) => {
       })
     );
     setInput("");
+    chatRef?.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+
     return true;
   };
 

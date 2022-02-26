@@ -6,7 +6,7 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useAppSelector } from "../app/hooks";
 import {
@@ -23,14 +23,21 @@ const turnToDefined = (str: string | null) => {
 };
 
 const Chat: React.FC = () => {
+  const chatRef = useRef<HTMLDivElement>(null);
   const roomId = useAppSelector(selectRoomId) || "abc";
   const [roomDetails] = useDocument(doc(getFirestore(), "rooms", roomId));
-  const [roomMessages] = useCollection(
+  const [roomMessages, loading] = useCollection(
     query(
       collection(getFirestore(), "rooms", roomId, "messages"),
       orderBy("timestamp", "asc")
     )
   );
+
+  useEffect(() => {
+    chatRef?.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [roomId, loading]);
   return (
     <ChatContainer>
       <>
@@ -61,9 +68,11 @@ const Chat: React.FC = () => {
               />
             );
           })}
+          <ChatBottom ref={chatRef} />
         </ChatMessages>
 
         <ChatInput
+          chatRef={chatRef}
           channelName={roomDetails?.data()?.name || "Channel"}
           channelId={roomId}
         />
@@ -117,4 +126,8 @@ const ChatContainer = styled.div`
   flex-grow: 1;
   overflow-y: scroll;
   margin-top: 60px;
+`;
+
+const ChatBottom = styled.div`
+  padding-bottom: 200px;
 `;
