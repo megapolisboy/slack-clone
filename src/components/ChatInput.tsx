@@ -1,6 +1,8 @@
 import { Button } from "@material-ui/core";
+import { getAuth } from "firebase/auth";
 import { serverTimestamp } from "firebase/firestore";
 import React, { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { addMessage } from "../features/currentRoomSlice";
@@ -16,6 +18,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   chatRef,
 }) => {
   const [input, setInput] = useState<string>("");
+  const [user] = useAuthState(getAuth());
   const dispatch = useAppDispatch();
   const roomId = useAppSelector((state) => state.currentRoom.roomId);
   const sendMessage = (e: React.MouseEvent<HTMLButtonElement>): boolean => {
@@ -30,14 +33,14 @@ const ChatInput: React.FC<ChatInputProps> = ({
         message: {
           message: input,
           timestamp: serverTimestamp(),
-          user: "Vova Kovalov",
-          userImage:
-            "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+          user: user?.displayName || "User",
+          userImage: user?.photoURL || "#",
         },
         roomId,
       })
     );
     setInput("");
+
     chatRef?.current?.scrollIntoView({
       behavior: "smooth",
     });

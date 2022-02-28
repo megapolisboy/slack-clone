@@ -17,10 +17,13 @@ import styled from "styled-components";
 import SidebarOption from "./SidebarOption";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { fetchRooms, selectRooms } from "../features/roomsSlice";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
 
 const Sidebar: React.FC = () => {
   const channels = useAppSelector(selectRooms);
   const dispatch = useAppDispatch();
+  const [user] = useAuthState(getAuth());
 
   useEffect(() => {
     dispatch(fetchRooms());
@@ -33,7 +36,7 @@ const Sidebar: React.FC = () => {
           <h2>OOPPRO</h2>
           <h3>
             <FiberManualRecord />
-            Vova Kovalov
+            {user?.displayName}
           </h3>
         </SidebarInfo>
         <Create />

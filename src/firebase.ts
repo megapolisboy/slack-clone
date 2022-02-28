@@ -57,3 +57,14 @@ export const addMessageToFirebase = (message: Message, roomId: string) => {
     ...message,
   });
 };
+
+export const signInWithFirebase = () => {
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(getAuth(), provider).catch((err: Error) => {
+    alert(err.message);
+  });
+};
+
+export const signOutWithFirebase = () => {
+  signOut(getAuth());
+};

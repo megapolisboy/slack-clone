@@ -8,7 +8,6 @@ const Message: React.FC<MessageProps> = ({
   user,
   userImage,
 }) => {
-  console.log(message, timestamp, user, userImage);
   return (
     <MessageContainer>
       <img src={userImage} alt="" />

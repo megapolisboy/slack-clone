@@ -20,7 +20,6 @@ const initialState: RoomsState = {
 export const fetchRooms = createAsyncThunk("rooms/fetchRooms", async () => {
   const rooms = await fetchRoomsFromFirebase();
   let roomsData: Room[] = [];
-  console.log("Data fetched");
   rooms.forEach((room) =>
     roomsData.push({ name: room.data().name, id: room.id })
   );
